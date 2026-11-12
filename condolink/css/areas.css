@@ -1,0 +1,86 @@
+/* Página Áreas de Lazer (areas.php) */
+.areas_hero{
+    background-color: #0D2E63;
+    margin: 60px 60px 0;
+    padding: 30px;
+    border-radius: 30px;
+    box-shadow: 0 10px 25px rgba(13, 46, 99, 0.15);
+    font-family: sans-serif;
+    color: #FFFFFF;
+    text-align: center;
+}
+.areas_hero h1{ font-size: 45px; margin-bottom: 0; }
+.areas_hero p{ font-size: 17px; }
+.areas_hero span{ color: #D4AF37; }
+
+.areas_secao{
+    max-width: 1100px;
+    margin: 70px auto 0;
+    padding: 0 20px;
+    font-family: sans-serif;
+}
+.areas_secao h2{ color: #0D2E63; font-size: 30px; text-align: center; margin-bottom: 8px; }
+.areas_secao > p{ color: #4a5b78; text-align: center; margin-top: 0; }
+
+.areas_grid{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    margin-top: 40px;
+}
+.area_card{
+    background-color: #ffffff;
+    border-radius: 16px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 4px 15px rgba(13, 46, 99, 0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.area_card:hover{
+    transform: translateY(-4px);
+    box-shadow: 0 10px 25px rgba(13, 46, 99, 0.18);
+}
+.area_foto{
+    aspect-ratio: 16 / 9;
+    background-color: #0D2E63;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+.area_foto img{ width: 100%; height: 100%; object-fit: cover; display: block; }
+.area_inicial{ color: #D4AF37; font-size: 64px; font-weight: bold; }
+.area_corpo{ padding: 20px; display: flex; flex-direction: column; gap: 10px; }
+.area_topo{ display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+.area_topo h3{ margin: 0; color: #0D2E63; font-size: 20px; }
+.area_status{ font-size: 12px; font-weight: bold; padding: 4px 10px; border-radius: 20px; white-space: nowrap; }
+.status_ativo{ background-color: #e3f4e8; color: #1e7a3c; }
+.status_manutencao{ background-color: #fff3d6; color: #8a6200; }
+.area_capacidade{ color: #0D2E63; font-weight: bold; font-size: 14px; margin: 0; }
+.area_regras{ color: #4a5b78; font-size: 14px; line-height: 1.5; margin: 0; }
+
+.reserva_passos{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    margin-top: 40px;
+}
+.reserva_passo{
+    background-color: #ffffff;
+    border-radius: 16px;
+    border-top: 4px solid #D4AF37;
+    padding: 24px;
+    box-shadow: 0 4px 15px rgba(13, 46, 99, 0.08);
+}
+.reserva_passo h4{ margin: 0 0 8px; color: #0D2E63; font-size: 18px; }
+.reserva_passo p{ margin: 0; color: #4a5b78; font-size: 14px; line-height: 1.5; }
+
+@media (max-width: 900px){
+    .areas_grid, .reserva_passos{ grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 600px){
+    .areas_grid, .reserva_passos{ grid-template-columns: 1fr; }
+    .areas_hero{ margin: 30px 20px 0; }
+    .areas_hero h1{ font-size: 32px; }
+}
