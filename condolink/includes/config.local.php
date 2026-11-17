@@ -1,5 +1,5 @@
 <?php
-define('RESEND_API_KEY', '');
-define('MAIL_FROM', 'CondoLink <onboarding@resend.dev>');
-define('APP_URL', 'http://localhost/condolink');
+define('SMTP_USER', 'miguelmunizdecamargo322@gmail.com');
+define('SMTP_PASS', '');
+define('APP_URL', 'https://carded-acorn-irritate.ngrok-free.dev/condolink');
 define('APP_DEBUG', '1');

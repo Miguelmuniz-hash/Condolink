@@ -1,50 +1,51 @@
 <?php
-// Envio de e-mails pela API do Resend (https://resend.com/docs/api-reference/emails/send-email).
+// Envio de e-mails via SMTP (Gmail) usando PHPMailer.
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
 require_once __DIR__ . '/config.php';
+require_once __DIR__ . '/../PHPMailer/Exception.php';
+require_once __DIR__ . '/../PHPMailer/PHPMailer.php';
+require_once __DIR__ . '/../PHPMailer/SMTP.php';
 
 /**
- * Envia um e-mail. Retorna true se o Resend aceitou o envio.
- * Sem chave configurada: em modo APP_DEBUG grava o conteúdo no log do PHP (útil no XAMPP).
+ * Envia um e-mail. Retorna true se o SMTP aceitou o envio.
+ * Sem SMTP configurado: em modo APP_DEBUG grava o conteúdo no log do PHP (útil no XAMPP).
  */
 function enviar_email(string $para, string $assunto, string $html, string $texto): bool
 {
-    if (RESEND_API_KEY === '') {
+    if (!defined('SMTP_USER') || !defined('SMTP_PASS') || SMTP_USER === '' || SMTP_PASS === '') {
         if (APP_DEBUG === '1') {
-            error_log("[CondoLink] (sem RESEND_API_KEY) e-mail para $para | $assunto | $texto");
+            error_log("[CondoLink] (sem SMTP configurado) e-mail para $para | $assunto | $texto");
         }
         return false;
     }
 
-    $corpo = json_encode([
-        'from'    => MAIL_FROM,
-        'to'      => [$para],
-        'subject' => $assunto,
-        'html'    => $html,
-        'text'    => $texto,
-    ], JSON_UNESCAPED_UNICODE);
+    $mail = new PHPMailer(true);
+    try {
+        $mail->isSMTP();
+        $mail->Host       = 'smtp.gmail.com';
+        $mail->SMTPAuth   = true;
+        $mail->Username   = SMTP_USER;
+        $mail->Password   = SMTP_PASS;
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+        $mail->Port       = 587;
+        $mail->CharSet    = 'UTF-8';
+        $mail->Timeout    = 10;
 
-    $ch = curl_init('https://api.resend.com/emails');
-    curl_setopt_array($ch, [
-        CURLOPT_POST           => true,
-        CURLOPT_POSTFIELDS     => $corpo,
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_CONNECTTIMEOUT => 5,
-        CURLOPT_TIMEOUT        => 10,
-        CURLOPT_HTTPHEADER     => [
-            'Authorization: Bearer ' . RESEND_API_KEY,
-            'Content-Type: application/json',
-        ],
-    ]);
-    $resposta = curl_exec($ch);
-    $status   = (int) curl_getinfo($ch, CURLINFO_RESPONSE_CODE);
-    $erro     = curl_error($ch);
-    curl_close($ch);
+        $mail->setFrom(SMTP_USER, 'CondoLink');
+        $mail->addAddress($para);
+        $mail->Subject = $assunto;
+        $mail->isHTML(true);
+        $mail->Body    = $html;
+        $mail->AltBody = $texto;
 
-    if ($resposta === false || $status < 200 || $status >= 300) {
-        error_log("[CondoLink] Resend falhou (HTTP $status): $erro $resposta");
+        $mail->send();
+        return true;
+    } catch (Exception $e) {
+        error_log('[CondoLink] SMTP falhou: ' . $mail->ErrorInfo);
         return false;
     }
-    return true;
 }
 
 function enviar_email_redefinicao(string $para, string $nome, string $link): bool
