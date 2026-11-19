@@ -1,0 +1,15 @@
+# Configurações locais e credenciais sensíveis (chave Resend, senha do banco)
+includes/config.local.php
+.env
+*.local.php
+
+# Dependências e arquivos temporários
+/vendor/
+node_modules/
+
+# Logs e arquivos de sistema/IDE
+*.log
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
