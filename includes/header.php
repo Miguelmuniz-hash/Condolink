@@ -17,8 +17,8 @@ $cssExtra  = $cssExtra  ?? [];
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#0D2E63">
     <title><?= e($titulo) ?> | CondoLink</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/app.css">
+    <link rel="stylesheet" href="css/style.css?v=<?= filemtime(__DIR__ . '/../css/style.css') ?>">
+    <link rel="stylesheet" href="css/app.css?v=<?= filemtime(__DIR__ . '/../css/app.css') ?>">
 <?php foreach ($cssExtra as $arquivoCss): ?>
     <link rel="stylesheet" href="css/<?= e($arquivoCss) ?>">
 <?php endforeach; ?>

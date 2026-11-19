@@ -48,7 +48,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             )->execute([$idAssinatura, $metodo, $v['base'] / 100, $v['desc_pix'] / 100, $v['total'] / 100]);
             $idTransacao = (int) $pdo->lastInsertId();
 
-            $resultado = processar_pagamento($metodo, $v['total'], $idTransacao);
+            $cenario = PAGAMENTO_SIMULADO === '1' ? ($_POST['cenario_sim'] ?? 'aprovada') : 'aprovada';
+$resultado = processar_pagamento($metodo, $v['total'], $idTransacao, $cenario);
 
             $pdo->prepare('UPDATE transacoes SET status = ?, referencia = ? WHERE id = ?')
                 ->execute([$resultado['status'], $resultado['referencia'], $idTransacao]);
@@ -61,17 +62,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             } elseif ($resultado['status'] === 'recusada') {
                 $pdo->prepare("UPDATE assinaturas SET status = 'cancelada' WHERE id = ?")->execute([$idAssinatura]);
             }
-            $pdo->commit();
 
-            unset($_SESSION['checkout_plano']);
+
+                        $pdo->commit();
+
             if ($resultado['status'] === 'aprovada') {
+                unset($_SESSION['checkout_plano']);
                 flash_set('sucesso', 'Pagamento aprovado! Seu plano ' . $plano['nome'] . ' está ativo.');
                 redirect('painel.php');
             } elseif ($resultado['status'] === 'pendente') {
+                unset($_SESSION['checkout_plano']);
                 flash_set('info', 'Recebemos seu pedido. A assinatura será ativada assim que o pagamento for confirmado.');
                 redirect('painel.php');
             }
             $erro = 'O pagamento foi recusado. Confira os dados ou tente outro método.';
+
+
+
         } catch (Throwable $falha) {
             if ($pdo->inTransaction()) {
                 $pdo->rollBack();
@@ -151,6 +158,7 @@ $check = 'https://www.image2url.com/r2/default/images/1789341600421-2ab05415-cdd
                     <p>Abra o aplicativo do seu banco, escolha pagar com PIX e aponte a câmera para o código.</p>
                 </div>
             </div>
+
 
             <button type="submit" class="btn-finalizar">Finalizar Pagamento</button>
             <p class="seguro">Pagamento seguro e criptografado</p>

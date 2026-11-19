@@ -11,11 +11,11 @@ require_once __DIR__ . '/config.php';
 /**
  * @return array{status:string,referencia:string}  status: aprovada | pendente | recusada
  */
-function processar_pagamento(string $metodo, int $totalCentavos, int $idTransacao): array
+function processar_pagamento(string $metodo, int $totalCentavos, int $idTransacao, string $cenario = 'aprovada'): array
 {
     if (PAGAMENTO_SIMULADO === '1') {
-        return ['status' => 'aprovada', 'referencia' => 'SIM-' . $idTransacao . '-' . bin2hex(random_bytes(4))];
+        $status = in_array($cenario, ['aprovada', 'recusada', 'pendente'], true) ? $cenario : 'aprovada';
+        return ['status' => $status, 'referencia' => 'SIM-' . $idTransacao . '-' . bin2hex(random_bytes(4))];
     }
-    // TODO: integrar o provedor real aqui. Enquanto isso, a cobrança fica pendente.
     return ['status' => 'pendente', 'referencia' => ''];
 }

@@ -40,14 +40,14 @@ $jsExtra = $jsExtra ?? [];
     </div>
 
     <div class="footer-bottom">
-      <p>&copy; <?= date('Y') ?> Condomínio Bela Vista. Todos os direitos reservados.</p>
+      <p>&copy; <?= date('Y') ?> CondoLink. Todos os direitos reservados.</p>
     </div>
 
   </div>
 </footer>
-<script src="js/app.js"></script>
+<script src="js/app.js?v=<?= filemtime(__DIR__ . '/../js/app.js') ?>"></script>
 <?php foreach ($jsExtra as $script): ?>
-<script src="<?= e($script) ?>"></script>
+<script src="<?= e($script) ?>?v=<?= filemtime(__DIR__ . '/../' . $script) ?>"></script>
 <?php endforeach; ?>
 </body>
 </html>

@@ -94,8 +94,10 @@
     return '';
   }
 
+  var VALIDAR_CARTAO = true;
+
   form.addEventListener('submit', function (ev) {
-    if (campoMetodo.value !== 'cartao') return;
+    if (!VALIDAR_CARTAO || campoMetodo.value !== 'cartao') return;
     var msg = validarCartao();
     erroCartao.hidden = !msg;
     erroCartao.textContent = msg;
